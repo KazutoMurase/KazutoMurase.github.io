@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">3.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">4.</strong> 結果出力</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">3.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">4.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">5.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">6.</strong> 選手呼び出し係</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -201,6 +201,38 @@ COMPETITION_NAME には data/ 直下のディレクトリ名を指定する。</
 <pre><code class="language-bash"># eg. EVENT_NAME=(hokei_man|hokei_woman|zissen_man|zissen_woman|hokei_sonen|dantai_zissen_man|dantai_zissen_woman)
 curl http://(SERVER_NAME)/api/get_winners?event_name=(EVENT_NAME) | jq
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="選手点呼係"><a class="header" href="#選手点呼係">選手点呼係</a></h1>
+<ul>
+<li>各競技の選手の点呼を行う。</li>
+</ul>
+<h2 id="タブレット操作方法"><a class="header" href="#タブレット操作方法">タブレット操作方法</a></h2>
+<div style="color:#009900; font-size:25px">① 初期画面　コート選択</div>
+<p><img src="admin/../images/admin_initial_page.png" width="300" /></p>
+<div style="color:#009900; font-size:25px">② 競技の「点呼」選択</div>
+<p><img src="admin/../images/block_view_for_check_players.png" width="900" /></p>
+<div style="color:#009900; font-size:25px">③ 点呼画面</div>
+<p><img src="admin/../images/check_players_view.png" width="1000" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="選手呼び出し係"><a class="header" href="#選手呼び出し係">選手呼び出し係</a></h1>
+<ul>
+<li>選手棄権が出ていないか競技開始前に確認する<span style="color:blue">（以下の選手呼び出し画面で確認できます）</span>。</li>
+<li>各試合時の号令・選手呼び出しを行う。</li>
+</ul>
+<h2 id="タブレット操作方法-1"><a class="header" href="#タブレット操作方法-1">タブレット操作方法</a></h2>
+<div style="color:#009900; font-size:25px">① 初期画面　コート選択</div>
+<p><img src="admin/../images/admin_initial_page.png" width="300" /></p>
+<div style="color:#009900; font-size:25px">② 競技の「呼び出し」選択</div>
+<p><img src="admin/../images/block_view_for_call_players.png" width="900" /></p>
+<div style="color:#009900; font-size:25px">③ 選手呼び出し画面</div>
+<p><img src="admin/../images/call_players_view.png" width="1000" /></p>
+<div style="color:#009900; font-size:25px">④ 実戦選手の途中棄権の際のメモ機能
+<p style="color: #00BB00; font-size: 20px">
+実戦トーナメント途中で負傷し、反則勝利の際、次の試合でドクターストップが掛けられた場合、
+赤・白棄権のボタンで該当選手に取り消し線を付けることができます。
+</p>
+</div>
+<p><img src="admin/../images/call_players_strikethrough.png" width="900" /></p>
+<p style="color: #00BB00">※赤・白棄権ボタンをもう一度押下すると取り消し線は消えます。</p>
+<p style="color: #00BB00">※二回戦以降の棄権になるため、トーナメントに取り消し線は引かれません。</p>
 
                     </main>
 
