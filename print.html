@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">3.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">4.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">5.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">6.</strong> 選手呼び出し係</a></li><li class="chapter-item expanded "><a href="admin/record.html"><strong aria-hidden="true">7.</strong> 記録係</a></li><li class="chapter-item expanded "><a href="admin/announce.html"><strong aria-hidden="true">8.</strong> 司会</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">3.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">4.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/setup.html"><strong aria-hidden="true">5.</strong> 準備</a></li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">6.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">7.</strong> 選手呼び出し係</a></li><li class="chapter-item expanded "><a href="admin/record.html"><strong aria-hidden="true">8.</strong> 記録係</a></li><li class="chapter-item expanded "><a href="admin/announce.html"><strong aria-hidden="true">9.</strong> 司会</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -201,6 +201,38 @@ COMPETITION_NAME には data/ 直下のディレクトリ名を指定する。</
 <pre><code class="language-bash"># eg. EVENT_NAME=(hokei_man|hokei_woman|zissen_man|zissen_woman|hokei_sonen|dantai_zissen_man|dantai_zissen_woman)
 curl http://(SERVER_NAME)/api/get_winners?event_name=(EVENT_NAME) | jq
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="準備"><a class="header" href="#準備">準備</a></h1>
+<p>使用するスマートフォンまたはタブレットで以下サイトにアクセスする。
+初回はユーザー名/パスワードを入力する必要がある。
+アクセス後、ホーム画面に追加しておくとよい。</p>
+<ul>
+<li><a href="https://taido-competition-record-ym2upnal4a-an.a.run.app/admin">役員用サイト</a></li>
+</ul>
+<p>カメラでQRコードを読み取るのが楽である。</p>
+<img src="admin/../images/admin_link.png" />
+<h2 id="事前テスト"><a class="header" href="#事前テスト">事前テスト</a></h2>
+<p>以下サイトにアクセスする。
+初回はユーザー名/パスワードを入力する必要がある。</p>
+<ul>
+<li><a href="https://taido-competition-record-ym2upnal4a-an.a.run.app/test">テスト用サイト</a></li>
+</ul>
+<img src="admin/../images/test_link.png" />
+<p>X/Yコートがあり、片方を選び一通り進めることで、システム全体を体験できる。
+他に使用している人がいそうか(時程が進行しているなど)見ながら、
+空いている側のコートを利用するとよい。</p>
+<img src="admin/../images/test_top.png" width="400px" />
+<div style="color:#FF0000;">一通り終わったら、他の人が使えるように初期化をする。</div>
+<div>画面下の初期化ボタンを押し、別ウィンドウ/タブで「本当に初期化」をクリック。
+しばらく待つと(十数秒以内)時程がリセットされるので、確認する。</div>
+<br />
+<img src="admin/../images/test_reset.png" />
+<img src="admin/../images/test_reset_popup.png" />
+<h2 id="参考情報"><a class="header" href="#参考情報">参考情報</a></h2>
+<p>以下は選手・観客向けに公開される。尋ねられたら案内するとよい。</p>
+<ul>
+<li><a href="https://taido-competition-record-ym2upnal4a-an.a.run.app/">一般公開サイト</a></li>
+</ul>
+<img src="admin/../images/public_link.png" />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="選手点呼係"><a class="header" href="#選手点呼係">選手点呼係</a></h1>
 <ul>
 <li>各競技の選手の点呼を行う。</li>
