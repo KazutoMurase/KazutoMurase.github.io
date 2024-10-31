@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">3.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">4.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/setup.html"><strong aria-hidden="true">5.</strong> 準備</a></li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">6.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">7.</strong> 選手呼び出し係</a></li><li class="chapter-item expanded "><a href="admin/record.html"><strong aria-hidden="true">8.</strong> 記録係</a></li><li class="chapter-item expanded "><a href="admin/announce.html"><strong aria-hidden="true">9.</strong> 司会</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="develop/preparation.html"><strong aria-hidden="true">3.</strong> 大会準備</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">4.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">5.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/setup.html"><strong aria-hidden="true">6.</strong> 準備</a></li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">7.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">8.</strong> 選手呼び出し係</a></li><li class="chapter-item expanded "><a href="admin/record.html"><strong aria-hidden="true">9.</strong> 記録係</a></li><li class="chapter-item expanded "><a href="admin/announce.html"><strong aria-hidden="true">10.</strong> 司会</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -186,6 +186,17 @@ result以下にcsv形式で保存される。</p>
 <p><a href="develop/./develop.html">開発環境構築</a>の手順に従いイメージを作成しておく必要がある。</p>
 <p>本レポジトリのルートで以下を実行する。</p>
 <pre><code class="language-bash">tools/lint.bash
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="大会準備"><a class="header" href="#大会準備">大会準備</a></h1>
+<p>各大会毎にデータベースを構築する必要がある。</p>
+<p>以下実行しスクリプトを利用する為の環境を準備する。</p>
+<pre><code class="language-bash">python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+</code></pre>
+<h2 id="トーナメント用db作成"><a class="header" href="#トーナメント用db作成">トーナメント用DB作成</a></h2>
+<p>大会Excelファイルと出力先ディレクトリを入力すると自動で出力してくれる。</p>
+<pre><code class="language-bash">scripts/generate_tournament_db_from_xl.py --file-path (FILE_PATH_TO_EXCEL_FILE) --output-path (OUTPUT_DIRECTORY)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="サイトの構成"><a class="header" href="#サイトの構成">サイトの構成</a></h1>
 <p>大会結果閲覧用を除いて、BASIC認証がかかっている。
