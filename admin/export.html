@@ -144,16 +144,12 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="結果出力"><a class="header" href="#結果出力">結果出力</a></h1>
+<p>以下のように実行することで、途中結果や最終結果CSVをdata/(大会名)/result以下にエクスポート出来る。</p>
+<pre><code class="language-bash">tools/export.bash (URL)
+</code></pre>
 <h2 id="最終結果pdf"><a class="header" href="#最終結果pdf">最終結果pdf</a></h2>
 <p>躰道公式サイトに載せている最終結果は、各競技結果ページにおいて
 印刷出力(e.g. Ctrl+Pを押下 =&gt; &quot;Save as pdf&quot; を選択し保存)を行い、FTP経由でアップロードする。</p>
-<h2 id="各競技の入賞者"><a class="header" href="#各競技の入賞者">各競技の入賞者</a></h2>
-<p>褒賞授与や、総合得点の計算などは現在はエクセルベースで行っており、その計算には
-各種目毎の1~4位の選手/団体のIDをエクセルに入力する必要がある。</p>
-<p>その情報は以下のようにAPIを叩くことで取得することができる。</p>
-<pre><code class="language-bash"># eg. EVENT_NAME=(hokei_man|hokei_woman|zissen_man|zissen_woman|hokei_sonen|dantai_zissen_man|dantai_zissen_woman)
-curl http://(SERVER_NAME)/api/get_winners?event_name=(EVENT_NAME) | jq
-</code></pre>
 
                     </main>
 
