@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="develop/preparation.html"><strong aria-hidden="true">3.</strong> 大会準備</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">4.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">5.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/setup.html"><strong aria-hidden="true">6.</strong> 準備</a></li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">7.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">8.</strong> 選手呼び出し係</a></li><li class="chapter-item expanded "><a href="admin/record.html"><strong aria-hidden="true">9.</strong> 記録係</a></li><li class="chapter-item expanded "><a href="admin/announce.html"><strong aria-hidden="true">10.</strong> 司会</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">開発者向け</li><li class="chapter-item expanded "><a href="develop/develop.html"><strong aria-hidden="true">1.</strong> 開発環境構築</a></li><li class="chapter-item expanded "><a href="develop/tools.html"><strong aria-hidden="true">2.</strong> 開発用ツール</a></li><li class="chapter-item expanded "><a href="develop/preparation.html"><strong aria-hidden="true">3.</strong> 大会準備</a></li><li class="chapter-item expanded "><a href="develop/deploy.html"><strong aria-hidden="true">4.</strong> GCP環境へのデプロイ方法</a></li><li class="chapter-item expanded "><a href="site.html"><strong aria-hidden="true">5.</strong> サイトの構成</a></li><li class="chapter-item expanded "><a href="admin/export.html"><strong aria-hidden="true">6.</strong> 結果出力</a></li><li class="chapter-item expanded affix "><li class="part-title">役員マニュアル</li><li class="chapter-item expanded "><a href="admin/setup.html"><strong aria-hidden="true">7.</strong> 準備</a></li><li class="chapter-item expanded "><a href="admin/check_players.html"><strong aria-hidden="true">8.</strong> 選手点呼係</a></li><li class="chapter-item expanded "><a href="admin/call_players.html"><strong aria-hidden="true">9.</strong> 選手呼び出し係</a></li><li class="chapter-item expanded "><a href="admin/record.html"><strong aria-hidden="true">10.</strong> 記録係</a></li><li class="chapter-item expanded "><a href="admin/announce.html"><strong aria-hidden="true">11.</strong> 司会</a></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -198,6 +198,192 @@ pip install -r requirements.txt
 <p>大会Excelファイルと出力先ディレクトリを入力すると自動で出力してくれる。</p>
 <pre><code class="language-bash">scripts/generate_tournament_db_from_xl.py --file-path (FILE_PATH_TO_EXCEL_FILE) --output-path (OUTPUT_DIRECTORY)
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gcp環境へのデプロイ方法"><a class="header" href="#gcp環境へのデプロイ方法">GCP環境へのデプロイ方法</a></h1>
+<h2 id="必要な前準備"><a class="header" href="#必要な前準備">必要な前準備</a></h2>
+<ul>
+<li>Google Cloud CLIのインストール</li>
+<li>GCPアカウントへのブラウザ上でのログイン・本人確認
+<ul>
+<li>※Googleアカウントの本人確認を複数回実施しなくて済むよう、まずブラウザでコンソールにログインし、CLIでの認証にはコンソールで発行した鍵を用いる形とする</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-google-cloudプロジェクトの作成"><a class="header" href="#1-google-cloudプロジェクトの作成">1. Google Cloudプロジェクトの作成</a></h2>
+<ul>
+<li>ブラウザからGCPコンソールにログインし、新しいプロジェクトを作成
+<ul>
+<li>ここで設定したプロジェクトIDを以後<code>$PROJECT_ID</code>とする</li>
+</ul>
+</li>
+<li>作成後、gcloud CLIからプロジェクトを指定する</li>
+</ul>
+<pre><code class="language-bash">gcloud config set project PROJECT_ID
+</code></pre>
+<h2 id="2-サービスアカウントの作成と認証情報の取得"><a class="header" href="#2-サービスアカウントの作成と認証情報の取得">2. サービスアカウントの作成と認証情報の取得</a></h2>
+<h3 id="1-ブラウザでサービスアカウントを作成"><a class="header" href="#1-ブラウザでサービスアカウントを作成">(1) ブラウザでサービスアカウントを作成</a></h3>
+<ul>
+<li>GCPコンソールから、<code>IAMと管理</code>&gt;<code>サービスアカウント</code>&gt;<code>サービスアカウントを作成</code>
+<ul>
+<li>作成したアカウント名を以後<code>$SERVICE_ACCOUNT_NAME</code>とする</li>
+</ul>
+</li>
+<li>ロール：以下のみ付与
+<ul>
+<li>Cloud Build 編集者: <code>roles/cloudbuild.builds.editor</code></li>
+<li>Cloud SQL クライアント: <code>roles/cloudsql.client</code></li>
+<li>Artifact Registry 書き込み: <code>roles/artifactregistry.writer</code></li>
+<li>Secret Manager シークレット参照: <code>roles/secretmanager.secretAccessor</code></li>
+<li>Cloud Run 管理者: <code>roles/run.admin</code></li>
+<li>Service Usage 管理者: <code>roles/serviceusage.serviceUsageAdmin</code></li>
+<li>サービスアカウントユーザー: <code>roles/iam.serviceAccountUser</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-サービスアカウントのjson鍵を作成ダウンロード"><a class="header" href="#2-サービスアカウントのjson鍵を作成ダウンロード">(2) サービスアカウントのJSON鍵を作成・ダウンロード</a></h3>
+<ul>
+<li>
+<p>作成したアカウントの<code>キー</code>タブ → <code>キーを追加</code>→<code>新しい鍵を作成</code>→<code>JSON</code></p>
+</li>
+<li>
+<p>ダウンロードされたjsonファイルのファイル名をkey.jsonに変えて、リポジトリルートに移しておく</p>
+</li>
+</ul>
+<pre><code class="language-bash">mv /path-to-your-download-dir/your-file-name.json ./key.json
+</code></pre>
+<h3 id="3-gcloud-cliで認証"><a class="header" href="#3-gcloud-cliで認証">(3) gcloud CLIで認証</a></h3>
+<pre><code class="language-bash">gcloud auth activate-service-account --key-file=key.json
+</code></pre>
+<ul>
+<li>必要なAPIを有効化しておく</li>
+</ul>
+<pre><code class="language-bash">gcloud services enable \
+  cloudresourcemanager.googleapis.com \
+  run.googleapis.com \
+  compute.googleapis.com \
+  sqladmin.googleapis.com \
+  artifactregistry.googleapis.com \
+  cloudbuild.googleapis.com \
+  servicenetworking.googleapis.com \
+  secretmanager.googleapis.com \
+  cloudshell.googleapis.com
+</code></pre>
+<h2 id="3-artifact-registryにdockerリポジトリを作成"><a class="header" href="#3-artifact-registryにdockerリポジトリを作成">3. Artifact RegistryにDockerリポジトリを作成</a></h2>
+<p>GCPコンソールからArtifact Registryを開き、Dockerリポジトリを作成する</p>
+<ul>
+<li>名前: ar-docker-repo
+<ul>
+<li>任意に設定可能。ここで設定したリポジトリ名を以後<code>$ARTIFACT_REGISTRY_REPO_NAME</code>とする</li>
+</ul>
+</li>
+<li>形式: Docker</li>
+<li>モード: 標準</li>
+<li>ロケーションタイプ: リージョン asia-northeast1</li>
+<li>説明: 大会名が区別できるように適宜</li>
+<li>不変のイメージタグ: 有効</li>
+</ul>
+<h2 id="4-cloud-sql-インスタンスの作成"><a class="header" href="#4-cloud-sql-インスタンスの作成">4. Cloud SQL インスタンスの作成</a></h2>
+<p>GCPコンソールからCloud SQLを開き、インスタンスを作成する</p>
+<ul>
+<li>エディション: Enterprise（サンドボックス）</li>
+<li>バージョン: PostgreSQL 17</li>
+<li>インスタンスID: postgres-instance
+<ul>
+<li>任意に設定可能。ここで設定したインスタンスIDを以後<code>$CLOUDSQL_INSTANCE_ID</code>とする</li>
+</ul>
+</li>
+<li>パスワード: postgres</li>
+<li>リージョン: asia-northeast1</li>
+<li>可用性: シングルゾーン</li>
+</ul>
+<h2 id="5-cloudbuildyamlファイルの作成"><a class="header" href="#5-cloudbuildyamlファイルの作成">5. cloudbuild.yamlファイルの作成</a></h2>
+<p>CIにおいて実行する内容を定義するcloudbuild.yamlファイルを作成する。
+実行内容は基本的には毎回共通だが、各種リソースのIDなどを埋め込む必要があるため、.envに記載した内容を元にyamlファイルを生成するスクリプトを用意している。</p>
+<ul>
+<li>./ci/.envに必要な変数を記入して、以下を実行する。</li>
+</ul>
+<pre><code>./ci/generate-cloudbuild.sh
+</code></pre>
+<ul>
+<li><code>cloudbuild_$PROJECT_ID.yaml</code>というファイルが生成される。</li>
+<li>作成したファイルをコミットしてmainブランチに取り込んでおく。</li>
+</ul>
+<h2 id="6-githubとのcloud-build連携"><a class="header" href="#6-githubとのcloud-build連携">6. GitHubとのCloud Build連携</a></h2>
+<p>GCPコンソールから<code>Cloud Build</code>→プロジェクトを選択 →<code>リポジトリを接続</code>→GitHub</p>
+<ul>
+<li>GitHubアカウントをOAuthで接続（リポジトリの管理者レベルの権限が必要、適宜依頼する）</li>
+<li>対象のリポジトリを選択して登録</li>
+</ul>
+<p>(参考) <a href="https://cloud.google.com/build/docs/automating-builds/create-manage-triggers?hl=ja">ビルドトリガーの作成と管理 | Cloud Build Documentation | Google Cloud</a></p>
+<h2 id="7-cloud-buildトリガーの作成"><a class="header" href="#7-cloud-buildトリガーの作成">7. Cloud Buildトリガーの作成</a></h2>
+<p>GCPコンソールを開き、Cloud Buildから接続済みのリポジトリを選んでトリガーを作成する</p>
+<ul>
+<li>名前: 任意</li>
+<li>リージョン: global</li>
+<li>説明: 任意</li>
+<li>イベント: ブランチにpushする</li>
+<li>リポジトリサービス: Cloud Buildリポジトリ</li>
+<li>構成: Cloud Build構成ファイル（yamlまたはjson）</li>
+<li>CloudBuild構成ファイルの場所: <code>/ci/cloudbuild_$PROJECT_ID.yaml</code>
+<ul>
+<li>手順5で作成したファイルを参照する</li>
+</ul>
+</li>
+<li>サービスアカウント: 手順2(1)で作成したアカウントを選択</li>
+</ul>
+<h2 id="8-初回イメージの手動ビルドとpush"><a class="header" href="#8-初回イメージの手動ビルドとpush">8. 初回イメージの手動ビルドとpush</a></h2>
+<p>Cloud Buildのトリガーの動作前に、Cloud Runへのデプロイに必要なDockerイメージをArtifact Registryに一度手動でpushする。
+($IMAGE_NAMEは手順5で.envファイルに設定したイメージ名)</p>
+<pre><code class="language-bash">gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+docker build -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE_NAME .
+docker push asia-northeast1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE_NAME
+</code></pre>
+<h2 id="9-cloud-run公開アクセスの許可"><a class="header" href="#9-cloud-run公開アクセスの許可">9. Cloud Run公開アクセスの許可</a></h2>
+<pre><code class="language-bash"># Cloud Run サービスの初回デプロイ
+gcloud run deploy $IMAGE_NAME \
+  --image=asia-northeast1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE_NAME \
+  --region=asia-northeast1 \
+  --platform=managed \
+  --allow-unauthenticated
+</code></pre>
+<p>成功すると以下のように表示され、サービスにアクセスするためのURLが確認できる。</p>
+<pre><code>Deploying container to Cloud Run service [$IMAGE_NAME] in project [$PROJECT_ID] region [asia-northeast1]
+...
+Service URL: https://$IMAGE_NAME-$ランダムなハッシュ値-uc.a.run.app
+</code></pre>
+<h2 id="10-cloudsqlの初期テーブル作成"><a class="header" href="#10-cloudsqlの初期テーブル作成">10. CloudSQLの初期テーブル作成</a></h2>
+<ul>
+<li>
+<p>Cloud SQL Auth Proxy(Cloud SQLインスタンスへの接続のための公式バイナリ)をダウンロードする</p>
+<ul>
+<li>参考：<a href="https://cloud.google.com/sql/docs/postgres/sql-proxy?hl=ja#install">Cloud SQL Auth Proxy をダウンロードしてインストールする</a></li>
+</ul>
+</li>
+<li>
+<p>ローカルにpsqlをインストール</p>
+</li>
+</ul>
+<pre><code class="language-bash">chmod +x cloud-sql-proxy
+
+# プロキシ起動
+./cloud-sql-proxy --credentials-file=key.json $PROJECT_ID:$REGION:$INSTANCE_NAME &amp;
+
+export PGPASSWORD=postgres
+cd ./data/test/static
+psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
+cd ../original
+psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
+cd ../../$COMPETITION_NAME/static
+psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
+cd ../original
+psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
+</code></pre>
+<p>(参考) <a href="https://cloud.google.com/run/docs/authenticating/public?hl=ja#gcloud">公開（未認証）アクセスを許可する | Cloud Run Documentation | Google Cloud</a></p>
+<h2 id="オプショナル-memorystoreの利用必要に応じて"><a class="header" href="#オプショナル-memorystoreの利用必要に応じて">オプショナル. Memorystoreの利用（必要に応じて）</a></h2>
+<p>MemorystoreはredisをCloud側で立ててくれるサービス。Cloud Runのインスタンス数を2個以上にスケーリングする可能性がある場合は使う必要がある(<a href="https://github.com/KazutoMurase/taido-competition-record/issues/125">参考</a>)が、これまでの運用実績では必要な場面は無し。</p>
+<ul>
+<li>Cloud Runスケーリングが必要な場合に構成</li>
+<li>Cloud Runの「接続」→ Memorystoreを追加</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="サイトの構成"><a class="header" href="#サイトの構成">サイトの構成</a></h1>
 <p>大会結果閲覧用を除いて、BASIC認証がかかっている。
 .envのUSERNAME, PASSWORDに設定される。</p>
