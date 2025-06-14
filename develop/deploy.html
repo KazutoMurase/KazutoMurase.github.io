@@ -224,7 +224,7 @@
 <li>モード: 標準</li>
 <li>ロケーションタイプ: リージョン asia-northeast1</li>
 <li>説明: 大会名が区別できるように適宜</li>
-<li>不変のイメージタグ: 有効</li>
+<li>不変のイメージタグ: 無効</li>
 </ul>
 <h2 id="4-cloud-sql-インスタンスの作成"><a class="header" href="#4-cloud-sql-インスタンスの作成">4. Cloud SQL インスタンスの作成</a></h2>
 <p>GCPコンソールからCloud SQLを開き、インスタンスを作成する</p>
@@ -277,18 +277,20 @@
 </ul>
 <h2 id="8-初回イメージの手動ビルドとpush"><a class="header" href="#8-初回イメージの手動ビルドとpush">8. 初回イメージの手動ビルドとpush</a></h2>
 <p>Cloud Buildのトリガーの動作前に、Cloud Runへのデプロイに必要なDockerイメージをArtifact Registryに一度手動でpushする。
-($IMAGE_NAMEは手順5で.envファイルに設定したイメージ名)</p>
+($IMAGE_NAME, $CLOUD_RUN_DEPLOY_NAMEは手順5で.envファイルに設定したイメージ名)</p>
 <pre><code class="language-bash">gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 docker build -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE_NAME .
 docker push asia-northeast1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE_NAME
 </code></pre>
 <h2 id="9-cloud-run公開アクセスの許可"><a class="header" href="#9-cloud-run公開アクセスの許可">9. Cloud Run公開アクセスの許可</a></h2>
+<p>手動で一度デプロイしておく。リソース設定はCI buildで追って反映させる。</p>
 <pre><code class="language-bash"># Cloud Run サービスの初回デプロイ
-gcloud run deploy $IMAGE_NAME \
+gcloud run deploy $CLOUD_RUN_DEPLOY_NAME \
   --image=asia-northeast1-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE_NAME \
   --region=asia-northeast1 \
   --platform=managed \
   --allow-unauthenticated
+  --update-env-vars PRODUCTION=1 \
 </code></pre>
 <p>成功すると以下のように表示され、サービスにアクセスするためのURLが確認できる。</p>
 <pre><code>Deploying container to Cloud Run service [$IMAGE_NAME] in project [$PROJECT_ID] region [asia-northeast1]
