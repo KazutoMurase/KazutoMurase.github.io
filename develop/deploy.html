@@ -299,14 +299,17 @@ Service URL: https://$IMAGE_NAME-$ランダムなハッシュ値-uc.a.run.app
 </code></pre>
 <h2 id="10-cloudsqlの初期テーブル作成"><a class="header" href="#10-cloudsqlの初期テーブル作成">10. CloudSQLの初期テーブル作成</a></h2>
 <ul>
+<li>ローカルにpsqlをインストール</li>
+</ul>
+<p>例: Ubuntu22.04</p>
+<pre><code class="language-bash">sudo apt install postgresql-client-common postgresql-client-14
+</code></pre>
+<ul>
 <li>
 <p>Cloud SQL Auth Proxy(Cloud SQLインスタンスへの接続のための公式バイナリ)をダウンロードする</p>
 <ul>
 <li>参考：<a href="https://cloud.google.com/sql/docs/postgres/sql-proxy?hl=ja#install">Cloud SQL Auth Proxy をダウンロードしてインストールする</a></li>
 </ul>
-</li>
-<li>
-<p>ローカルにpsqlをインストール</p>
 </li>
 </ul>
 <pre><code class="language-bash">chmod +x cloud-sql-proxy
@@ -315,16 +318,25 @@ Service URL: https://$IMAGE_NAME-$ランダムなハッシュ値-uc.a.run.app
 ./cloud-sql-proxy --credentials-file=key.json $PROJECT_ID:$REGION:$INSTANCE_NAME &amp;
 
 export PGPASSWORD=postgres
-cd ./data/test/static
+cd ../../$COMPETITION_NAME/static
 psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
 cd ../original
 psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
-cd ../../$COMPETITION_NAME/static
+cd ./data/test/static
 psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
 cd ../original
 psql -h 127.0.0.1 -p 5432 -U postgres -d postgres -f generate_tables.sql
 </code></pre>
 <p>(参考) <a href="https://cloud.google.com/run/docs/authenticating/public?hl=ja#gcloud">公開（未認証）アクセスを許可する | Cloud Run Documentation | Google Cloud</a></p>
+<p>データベースの変更を一括で行いたい場合に、一度全削除してから行う方法は以下。</p>
+<pre><code class="language-bash">psql -h 127.0.0.1 -p 5432 -U postgres -d postgres
+
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+</code></pre>
+<p>接続が必要なくなったら、cloud-sql-proxyのプロセスは落としておくとよい。　</p>
+<pre><code class="language-bash">ps aux | grep -v grep | grep cloud-sql-proxy | tr -s &quot; &quot; | cut -d&quot; &quot; -f2 | xargs kill $1
+</code></pre>
 <h2 id="オプショナル-memorystoreの利用必要に応じて"><a class="header" href="#オプショナル-memorystoreの利用必要に応じて">オプショナル. Memorystoreの利用（必要に応じて）</a></h2>
 <p>MemorystoreはredisをCloud側で立ててくれるサービス。Cloud Runのインスタンス数を2個以上にスケーリングする可能性がある場合は使う必要がある(<a href="https://github.com/KazutoMurase/taido-competition-record/issues/125">参考</a>)が、これまでの運用実績では必要な場面は無し。</p>
 <ul>
