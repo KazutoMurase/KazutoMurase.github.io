@@ -419,6 +419,20 @@ CREATE SCHEMA public;
 <h2 id="最終結果pdf"><a class="header" href="#最終結果pdf">最終結果pdf</a></h2>
 <p>躰道公式サイトに載せている最終結果は、各競技結果ページにおいて
 印刷出力(e.g. Ctrl+Pを押下 =&gt; &quot;Save as pdf&quot; を選択し保存)を行い、FTP経由でアップロードする。</p>
+<h2 id="大会終了後"><a class="header" href="#大会終了後">大会終了後</a></h2>
+<p>最終結果CSVをエクスポートし終えたら、data/(大会名)/resultをコミットする。</p>
+<p>cloudbuild_$PROJECT_ID.yamlを編集しコミットする(Docker内DB接続に切り替わる)。</p>
+<ul>
+<li>add-cloudsql-instances項目を削除</li>
+<li>PGSQL_DATABASE=taido_recordに変更</li>
+<li>PGSQL_HOST=localhostに変更</li>
+<li>USE_LOCAL_DB=1に変更</li>
+</ul>
+<p>Cloud SQLを削除する(一日で700円台消費されるので早めに)。</p>
+<ol>
+<li>編集 -&gt; インスタンスの削除を防止する　のチェックを外して保存</li>
+<li>削除</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="準備"><a class="header" href="#準備">準備</a></h1>
 <p>使用するスマートフォンまたはタブレットで以下サイトにアクセスする。
 初回はユーザー名/パスワードを入力する必要がある。
